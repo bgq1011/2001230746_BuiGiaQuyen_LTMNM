@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Todo List</title>
+</head>
+<body>
+
+    <input type="text" id="taskInput" placeholder="Nhập việc cần làm...">
+    <button onclick="addTodo()">Thêm</button>
+
+    <ul id="todoList"></ul>
+
+<script>
+    const taskInput = document.getElementById('taskInput');
+    const todoList = document.getElementById('todoList');
+
+    // Tự động lấy danh sách cũ từ server khi vừa mở trang
+    fetch('api.php')
+        .then(res => res.json())
+        .then(data => data.forEach(renderTodo))
+        .catch(err => console.error("Lỗi tải danh sách:", err));
+
+    // Hàm hiển thị một công việc lên màn hình
+    function renderTodo(todo) {
+        const li = document.createElement('li');
+        li.id = todo.id;
+        const style = todo.completed ? 'text-decoration: line-through;' : '';
+
+        li.innerHTML = `
+            <input type="checkbox" ${todo.completed ? 'checked' : ''} onclick="toggleTodo('${todo.id}')">
+            <span style="${style}">${todo.task}</span>
+            <button onclick="deleteTodo('${todo.id}')">Xóa</button>
+        `;
+        todoList.appendChild(li);
+    }
+
+    // Hàm THÊM công việc
+    function addTodo() {
+        if (!taskInput.value.trim()) return;
+
+        fetch('api.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'add', task: taskInput.value })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                renderTodo(data.todo);
+                taskInput.value = ''; // Xóa chữ trong ô nhập
+            }
+        });
+    }
+
+    function toggleTodo(id) {
+        fetch('api.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'toggle', id: id })
+        }).then(() => {
+            const span = document.getElementById(id).querySelector('span');
+            span.style.textDecoration = span.style.textDecoration ? '' : 'line-through';
+        });
+    }
+
+    function deleteTodo(id) {
+        if (!confirm('Xóa việc này?')) return;
+        fetch('api.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'delete', id: id })
+        }).then(() => document.getElementById(id).remove());
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Tỷ giá ngoại tệ</title>
+</head>
+<body>
+
+    <h2>Bảng tỷ giá ngoại tệ</h2>
+    <p>Gốc: <strong id="baseCurrency">-</strong></p>
+    <p>Cập nhật lúc: <span id="updateTime">-</span></p>
+
+    <table border="1" cellpadding="5" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Ngoại tệ</th>
+                <th>Tỷ giá</th>
+            </tr>
+        </thead>
+        <tbody id="rateTable">
+            </tbody>
+    </table>
+
+<script>
+    function fetchRates() {
+        fetch('api.php')
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('baseCurrency').innerText = data.base_code;
+                document.getElementById('updateTime').innerText = data.time_last_update_utc;
+
+                const tbody = document.getElementById('rateTable');
+                tbody.innerHTML = ''; 
+
+                for (const [currency, rate] of Object.entries(data.rates)) {
+                    if(['VND', 'EUR', 'JPY', 'GBP', 'AUD', 'CAD'].includes(currency)) {
+                        const row = `<tr>
+                            <td>${currency}</td>
+                            <td>${rate.toLocaleString()}</td>
+                        </tr>`;
+                        tbody.innerHTML += row;
+                    }
+                }
+                console.log("Đã cập nhật tỷ giá mới lúc: " + new Date().toLocaleTimeString());
+            })
+            .catch(err => console.error("Lỗi lấy tỷ giá:", err));
+    }
+
+    fetchRates();
+
+    setInterval(fetchRates, 600000);
+</script>
+
+</body>
+</html>
