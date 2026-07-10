@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <button onclick="changeBg()">Đổi màu nền</button>
+    <script>
+        function changeBg() {
+            document.body.style.backgroundColor = "#" +
+                Math.floor(Math.random() * 16777215).toString(16);
+        }
+    </script>
+    <br>
+    <input type="text" id="txt" placeholder="Nhập gì đó">
+    <button onclick="showText()">Hiển thị</button>
+    <div id="output"></div>
+    <script>
+        function showText() {
+            document.getElementById("output").innerText =
+
+                document.getElementById("txt").value;
+        }
+    </script>
+    <br>
+    <input type="text" id="item">
+    <button onclick="addItem()">Thêm</button>
+    <ul id="list"></ul>
+    <script>
+        function addItem() {
+            let val = document.getElementById("item").value;
+            if (val.trim() !== "") {
+                let li = document.createElement("li");
+                li.innerText = val;
+                document.getElementById("list").appendChild(li);
+            }
+        }
+    </script>
+</body>
+
+</html>
