@@ -1,0 +1,8 @@
+{
+  "fiveServer.php.executable": "/home/codespace/.php/current/bin/php",
+  "fiveServer.injectBody": false,
+  "fiveServer.navigate": false,
+  "fiveServer.openTerminal": false,
+  "fiveServer.php.ini": ""
+
+}
