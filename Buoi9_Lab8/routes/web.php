@@ -11,6 +11,7 @@ Route::get('/', function () {
 });
 
 Route::resource('products', ProductController::class);
+//bài 5
 Route::get('/users', [UserController::class, 'index'])->name('users.index');
 Route::get('/students', [StudentController::class, 'index'])->name('students.index');
 Route::get('/advanced', [AdvancedController::class, 'index'])->name('advanced.index');
