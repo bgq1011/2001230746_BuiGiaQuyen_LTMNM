@@ -1,57 +1,53 @@
-@extends('layouts.app')
-
-@section('title', 'Đăng ký tài khoản')
-
-@section('content')
-<div style="max-width: 400px; margin: 30px auto; border: 1px solid #ccc; padding: 20px; border-radius: 4px; background-color: #fafafa;">
-    <h3 style="margin-top: 0; margin-bottom: 15px; text-align: center;">Đăng ký</h3>
-
+<x-guest-layout>
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
-        <!-- Họ và tên -->
-        <div class="form-group">
-            <label for="name">Họ và tên</label>
-            <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}" required autofocus autocomplete="name">
-            @error('name')
-                <div style="color: red; font-size: 0.85em; margin-top: 5px;">{{ $message }}</div>
-            @enderror
+        <!-- Name -->
+        <div>
+            <x-input-label for="name" value="Họ và tên" />
+            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" autofocus autocomplete="name" />
+            <x-input-error :messages="$errors->get('name')" class="mt-2" />
         </div>
 
-        <!-- Địa chỉ email -->
-        <div class="form-group" style="margin-top: 15px;">
-            <label for="email">Email</label>
-            <input type="email" name="email" id="email" class="form-control" value="{{ old('email') }}" required autocomplete="username">
-            @error('email')
-                <div style="color: red; font-size: 0.85em; margin-top: 5px;">{{ $message }}</div>
-            @enderror
+        <!-- Email Address -->
+        <div class="mt-4">
+            <x-input-label for="email" value="Email" />
+            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" autocomplete="username" />
+            <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
-        <!-- Mật khẩu -->
-        <div class="form-group" style="margin-top: 15px;">
-            <label for="password">Mật khẩu</label>
-            <input type="password" name="password" id="password" class="form-control" required autocomplete="new-password">
-            @error('password')
-                <div style="color: red; font-size: 0.85em; margin-top: 5px;">{{ $message }}</div>
-            @enderror
+        <!-- Password -->
+        <div class="mt-4">
+            <x-input-label for="password" value="Mật khẩu" />
+
+            <x-text-input id="password" class="block mt-1 w-full"
+                            type="password"
+                            name="password"
+                            autocomplete="new-password" />
+
+            <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
-        <!-- Xác nhận mật khẩu -->
-        <div class="form-group" style="margin-top: 15px;">
-            <label for="password_confirmation">Xác nhận mật khẩu</label>
-            <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" required autocomplete="new-password">
-            @error('password_confirmation')
-                <div style="color: red; font-size: 0.85em; margin-top: 5px;">{{ $message }}</div>
-            @enderror
+        <!-- Confirm Password -->
+        <div class="mt-4">
+            <x-input-label for="password_confirmation" value="Xác nhận mật khẩu" />
+
+            <x-text-input id="password_confirmation" class="block mt-1 w-full"
+                            type="password"
+                            name="password_confirmation"
+                            autocomplete="new-password" />
+
+            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
 
-        <div style="margin-top: 15px; text-align: right;">
-            <a href="{{ route('login') }}" style="font-size: 0.85em; color: #0066cc; text-decoration: none;">Đã có tài khoản? Đăng nhập</a>
-        </div>
+        <div class="flex items-center justify-end mt-4">
+            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
+                Đã có tài khoản? Đăng nhập
+            </a>
 
-        <div style="margin-top: 20px;">
-            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 8px;">Đăng ký</button>
+            <x-primary-button class="ms-4">
+                Đăng ký
+            </x-primary-button>
         </div>
     </form>
-</div>
-@endsection
+</x-guest-layout>

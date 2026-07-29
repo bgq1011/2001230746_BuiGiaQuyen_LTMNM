@@ -1,47 +1,53 @@
-@extends('layouts.app')
-
-@section('title', 'Đăng nhập')
-
-@section('content')
-<div style="max-width: 400px; margin: 30px auto; border: 1px solid #ccc; padding: 20px; border-radius: 4px; background-color: #fafafa;">
-    <h3 style="margin-top: 0; margin-bottom: 15px; text-align: center;">Đăng nhập</h3>
-    
-    @if(session('status'))
-        <div style="color: green; margin-bottom: 15px; font-size: 0.9em;">{{ session('status') }}</div>
-    @endif
+<x-guest-layout>
+    <!-- Session Status -->
+    <x-auth-session-status class="mb-4" :status="session('status')" />
 
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" name="email" id="email" class="form-control" value="{{ old('email') }}" required autofocus autocomplete="username">
-            @error('email')
-                <div style="color: red; font-size: 0.85em; margin-top: 5px;">{{ $message }}</div>
-            @enderror
+        <!-- Email Address -->
+        <div>
+            <x-input-label for="email" value="Email" />
+            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" autofocus autocomplete="username" />
+            <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
-        <div class="form-group" style="margin-top: 15px;">
-            <label for="password">Mật khẩu</label>
-            <input type="password" name="password" id="password" class="form-control" required autocomplete="current-password">
-            @error('password')
-                <div style="color: red; font-size: 0.85em; margin-top: 5px;">{{ $message }}</div>
-            @enderror
+        <!-- Password -->
+        <div class="mt-4">
+            <x-input-label for="password" value="Mật khẩu" />
+
+            <x-text-input id="password" class="block mt-1 w-full"
+                            type="password"
+                            name="password"
+                            autocomplete="current-password" />
+
+            <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
-        <div class="form-group" style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between;">
-            <label style="font-weight: normal; font-size: 0.9em; display: inline-flex; align-items: center; cursor: pointer;">
-                <input type="checkbox" name="remember" id="remember_me" style="margin-right: 5px;">
-                Duy trì đăng nhập
+        <!-- Remember Me -->
+        <div class="block mt-4">
+            <label for="remember_me" class="inline-flex items-center">
+                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
+                <span class="ms-2 text-sm text-gray-600">Ghi nhớ đăng nhập</span>
             </label>
-            @if (Route::has('password.request'))
-                <a href="{{ route('password.request') }}" style="font-size: 0.85em; color: #0066cc; text-decoration: none;">Quên mật khẩu?</a>
-            @endif
         </div>
 
-        <div style="margin-top: 20px;">
-            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 8px;">Đăng nhập</button>
+        <div class="flex items-center justify-between mt-4">
+            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('register') }}">
+                Chưa có tài khoản? Đăng ký
+            </a>
+
+            <div class="flex items-center">
+                @if (Route::has('password.request'))
+                    <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 me-3" href="{{ route('password.request') }}">
+                        Quên mật khẩu?
+                    </a>
+                @endif
+
+                <x-primary-button class="ms-3">
+                    Đăng nhập
+                </x-primary-button>
+            </div>
         </div>
     </form>
-</div>
-@endsection
+</x-guest-layout>

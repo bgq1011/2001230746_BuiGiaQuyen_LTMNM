@@ -21,6 +21,7 @@ class ArticleController extends Controller
     public function store(StoreArticleRequest $request)
     {
         $data = $request->validated();
+        $data['user_id'] = auth()->id();
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('articles', 'public');
@@ -54,5 +55,17 @@ class ArticleController extends Controller
 
         return redirect()->route('articles.index')
             ->with('success', 'Cập nhật bài viết thành công.');
+    }
+
+    public function destroy(Article $article)
+    {
+        if (!empty($article->image_path) && \Storage::disk('public')->exists($article->image_path)) {
+            \Storage::disk('public')->delete($article->image_path);
+        }
+
+        $article->delete();
+
+        return redirect()->route('articles.index')
+            ->with('success', 'Xóa bài viết thành công.');
     }
 }

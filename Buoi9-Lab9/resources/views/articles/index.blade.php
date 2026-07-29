@@ -10,33 +10,12 @@
         margin-top: 20px;
     }
     th, td {
-        border: 1px solid #ddd;
-        padding: 10px;
+        border: 1px solid #333;
+        padding: 8px 12px;
         text-align: left;
     }
     th {
         background-color: #f2f2f2;
-    }
-    tr:nth-child(even) {
-        background-color: #f9f9f9;
-    }
-    .btn {
-        padding: 5px 10px;
-        text-decoration: none;
-        background-color: #0066cc;
-        color: white;
-        border-radius: 3px;
-        font-size: 0.9em;
-    }
-    .btn:hover {
-        background-color: #004b99;
-    }
-    .btn-edit {
-        background-color: #ffc107;
-        color: black;
-    }
-    .btn-edit:hover {
-        background-color: #e0a800;
     }
 </style>
 @endsection
@@ -67,7 +46,7 @@
                     <td><strong>{{ $article->title }}</strong></td>
                     <td>
                         @if(!empty($article->image_path))
-                            <img src="{{ asset('storage/' . $article->image_path) }}" alt="Ảnh" style="max-width: 60px; max-height: 60px; border: 1px solid #ddd; padding: 2px; border-radius: 3px; display: block;">
+                            <img src="{{ asset('storage/' . $article->image_path) }}" alt="Ảnh" style="max-width: 120px; max-height: 120px; border: 1px solid #ddd; padding: 2px; border-radius: 3px; display: block;">
                         @else
                             <span style="color: #999; font-size: 0.85em;">Không có</span>
                         @endif
@@ -76,7 +55,16 @@
                     <td>{{ Str::limit($article->body, 50) }}</td>
                     <td>{{ $article->created_at->format('d/m/Y H:i') }}</td>
                     <td>
-                        <a href="{{ route('articles.edit', $article->id) }}" class="btn btn-edit">Sửa</a>
+                        @if(auth()->check() && $article->user_id === auth()->id())
+                            <a href="{{ route('articles.edit', $article->id) }}" class="btn btn-edit">Sửa</a>
+                            <form action="{{ route('articles.destroy', $article->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa bài viết này?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn" style="background-color: #dc3545; color: white; border: none; cursor: pointer;">Xóa</button>
+                            </form>
+                        @else
+                            <span style="color: #999; font-size: 0.85em;">Không có quyền</span>
+                        @endif
                     </td>
                 </tr>
             @endforeach

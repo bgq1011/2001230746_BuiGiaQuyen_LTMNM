@@ -132,6 +132,7 @@
             box-sizing: border-box;
         }
     </style>
+    @yield('styles')
 </head>
 <body>
     <div class="container">
@@ -141,8 +142,11 @@
                 <a href="{{ route('articles.index') }}">Danh sách bài viết</a>
                 
                 @auth
-                    <!-- Chỉ hiển thị cho người dùng đã đăng nhập -->
-                    <a href="{{ route('articles.create') }}">Tạo bài mới</a>
+                    <!-- Chỉ hiển thị nút Tạo bài mới cho Quản trị viên (sử dụng Gate admin) -->
+                    @can('admin')
+                        <a href="{{ route('articles.create') }}" style="background-color: #28a745; color: white; padding: 4px 8px; border-radius: 3px; font-weight: normal;">+ Quản trị: Tạo bài mới</a>
+                    @endcan
+
                     <span style="margin-left: 15px; font-size: 0.9em; color: #555;">(Chào, {{ Auth::user()->name }})</span>
                     <form method="POST" action="{{ route('logout') }}" style="display: inline; margin-left: 10px;">
                         @csrf

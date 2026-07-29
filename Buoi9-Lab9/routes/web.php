@@ -23,13 +23,25 @@ Route::get('/', function () {
 // Route xem danh sách bài viết: công khai (không cần đăng nhập)
 Route::get('/articles', [ArticleController::class, 'index'])->name('articles.index');
 
-// Nhóm route quản trị (tạo, lưu, sửa, cập nhật, xóa): yêu cầu đăng nhập (auth) + quyền admin (admin)
-Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
+// Nhóm route quản trị (tạo, lưu bài viết): yêu cầu đăng nhập & đã xác minh email (verified)
+Route::prefix('admin')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/articles/create', [ArticleController::class, 'create'])->name('articles.create');
     Route::post('/articles', [ArticleController::class, 'store'])->name('articles.store');
-    Route::get('/articles/{article}/edit', [ArticleController::class, 'edit'])->name('articles.edit');
-    Route::put('/articles/{article}', [ArticleController::class, 'update'])->name('articles.update');
-    Route::delete('/articles/{article}', [ArticleController::class, 'destroy'])->name('articles.destroy');
+
+    // Route sửa, cập nhật, xóa: yêu cầu là tác giả (author middleware)
+    Route::middleware(['author'])->group(function () {
+        Route::get('/articles/{article}/edit', [ArticleController::class, 'edit'])->name('articles.edit');
+        Route::put('/articles/{article}', [ArticleController::class, 'update'])->name('articles.update');
+        Route::delete('/articles/{article}', [ArticleController::class, 'destroy'])->name('articles.destroy');
+    });
+});
+
+// Route test ngoại lệ CSRF (Webhook / Payment Callback)
+Route::post('/payment/callback', function () {
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Nhận webhook/callback thành công mà không cần mã CSRF token!'
+    ]);
 });
 
 // Cấu hình throttle giới hạn tần suất gửi yêu cầu (Ví dụ: tối đa 5 yêu cầu/phút)
