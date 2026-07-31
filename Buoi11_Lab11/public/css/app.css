@@ -1,0 +1,13 @@
+/* Card ảnh hiển thị toàn bộ full hình, không bị cắt xén */
+.object-cover { object-fit: contain; height: 200px; background-color: #f8f9fa; }
+
+/* Khoảng cách tiêu đề, đoạn văn */
+h1, h2, h3 { letter-spacing: .2px; }
+.card-title a { color: inherit; }
+.card-title a:hover { text-decoration: underline; }
+
+/* Cải thiện khả năng đọc nội dung dài */
+.fs-5 { text-align: justify; hyphens: auto; }
+
+/* Footer cố định cảm giác nền trắng */
+footer { backdrop-filter: saturate(120%); }

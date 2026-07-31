@@ -1,0 +1,10 @@
+:root { --sidebar-w: 260px; }
+.admin-sidebar { width: var(--sidebar-w); }
+.admin-content { width: calc(100% - var(--sidebar-w)); }
+@media (max-width: 991.98px) {
+  .admin-sidebar { width: 100%; position: static; }
+  .admin-content { width: 100%; }
+}
+.table th, .table td { vertical-align: middle; }
+.card-title a { color: inherit; text-decoration: none; }
+.card-title a:hover { text-decoration: underline; }
